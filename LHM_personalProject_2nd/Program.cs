@@ -307,13 +307,15 @@ namespace newProject
 
                 if ((_player.Def+bonusDef) >= 17)
                 {
+                    _player.HP -= 80;
+                   
                     if(_player.HP+bonusHP > 0)
                     {
                         Console.WriteLine("축하합니다!");
                         Console.WriteLine("어려운 던전을 클리어하였습니다.");
                         Console.WriteLine("");
                         Console.WriteLine("[탐험 결과]");
-                        Console.WriteLine("체력 : " + (_player.HP) + " -> " + (_player.HP -= 80));
+                        Console.WriteLine("체력 : " + (_player.HP+80) + " -> " + (_player.HP));
                         Console.WriteLine("소지 골드 : " + (_player.Gold) + "G -> " + (_player.Gold += 3500) + "G");
                         Console.ReadKey();
                         Dungeon();
@@ -341,13 +343,15 @@ namespace newProject
               
                 if ((_player.Def+bonusDef) >= 11)
                 {
+                    _player.HP -= 50;
+
                     if(_player.HP+bonusHP > 0)
                     {
                         Console.WriteLine("축하합니다!");
                         Console.WriteLine("일반 던전을 클리어하였습니다.");
                         Console.WriteLine("");
                         Console.WriteLine("[탐험 결과]");
-                        Console.WriteLine("체력 : " + (_player.HP) + " -> " + (_player.HP -= 50));
+                        Console.WriteLine("체력 : " + (_player.HP+50) + " -> " + (_player.HP ));
                         Console.WriteLine("소지 골드 : " + (_player.Gold) + "G -> " + (_player.Gold += 2000) + "G");
                         Console.ReadKey();
                         Dungeon();
@@ -374,13 +378,15 @@ namespace newProject
                
                 if (_player.Def+bonusDef >= 5)
                 {
+                    _player.HP -= 30;
+                  
                    if(_player.HP+bonusHP > 0)
                     {
                         Console.WriteLine("축하합니다!");
                         Console.WriteLine("쉬운 던전을 클리어하였습니다.");
                         Console.WriteLine("");
                         Console.WriteLine("[탐험 결과]");
-                        Console.WriteLine("체력 : " + (_player.HP) + " -> " + (_player.HP -= 30));
+                        Console.WriteLine("체력 : " + (_player.HP+30) + " -> " + (_player.HP));
                         Console.WriteLine("소지 골드 : " + (_player.Gold) + "G -> " + (_player.Gold += 1200) + "G");
                         Console.ReadKey();
                         Dungeon();
