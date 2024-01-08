@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Dynamic;
+using System.Net;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
@@ -16,6 +17,7 @@ namespace newProject
     {
 
         public int Id { get; }
+        public int ItemType {get;}
         public string Name { get; }
         public string Desc { get; }
         public int Price { get; }
@@ -30,9 +32,10 @@ namespace newProject
         public static int itemCnt = 0;
 
 
-        public Items(int id, string name, string desc, int price, int atk, int def, int hp, int resellPrice, bool isEquip, bool alreadyHave, bool isOnSale)
+        public Items(int id, int itemType,string name, string desc, int price, int atk, int def, int hp, int resellPrice, bool isEquip, bool alreadyHave, bool isOnSale)
         {
             Id = id;
+            ItemType = itemType;
             Name = name;
             Desc = desc;
             Price = price;
@@ -132,23 +135,36 @@ namespace newProject
             static Player _player;
             static Items[] _items;
             static Items[] _haveItems;
+            static List<Items> _hands;
+            static List<Items> _body;
+            static List<Items> _boots;
+            static List<Items> _trinket;
+            static List<Items> _head;
 
             private static void gameSetting()
             {
                 _player = new Player(1, "까냥꾼", "전사", 10, 5, 100, 1500);
                 _items = new Items[8];
-                AddShopItem(new Items(1, "연장점검", "세상에서 가장 긴 검.", 150, 120, 0, 0, 128, false, false, true));
-                AddShopItem(new Items(2, "긴급점검", "딱히 빠르지는 않다.", 100, 80, 0, 0, 85, false, false, true));
-                AddShopItem(new Items(3, "고블린가죽갑옷", "냄새가 좀 난다.", 50, 0, 15, 20, 43, false, false, true));
-                AddShopItem(new Items(4, "토끼털슬리퍼", "작게'토끼공듀'라고 적혀있다.", 200, 10, 0, 10, 170, false, false, true));
-                AddShopItem(new Items(5, "징크스부적", "불행을 막아주기는 커녕 몰고온다.", 350, 50, -30, 0, 298, false, false, true));
-                AddShopItem(new Items(6, "함정카드", "전속전진", 250, 5, 20, 0, 213, false, false, true));
-                AddShopItem(new Items(7, "케이크", "블랙포레스트 체리 케이크. 거짓말이다.", 50, 0, 0, 100, 43, false, false, true));
-                AddShopItem(new Items(8, "맹독해골", "투구다. 팬티가 아니다.", 500, 0, 20, 60, 425, false, false, true));
+                AddShopItem(new Items(1,1, "연장점검", "세상에서 가장 긴 검.", 150, 120, 0, 0, 128, false, false, true));
+                AddShopItem(new Items(2,1, "긴급점검", "딱히 빠르지는 않다.", 100, 80, 0, 0, 85, false, false, true));
+                AddShopItem(new Items(3,2, "고블린가죽갑옷", "냄새가 좀 난다.", 50, 0, 15, 20, 43, false, false, true));
+                AddShopItem(new Items(4,3, "토끼털슬리퍼", "작게'토끼공듀'라고 적혀있다.", 200, 10, 0, 10, 170, false, false, true));
+                AddShopItem(new Items(5,4, "징크스부적", "불행을 막아주기는 커녕 몰고온다.", 350, 50, -30, 0, 298, false, false, true));
+                AddShopItem(new Items(6,4, "함정카드", "전속전진", 250, 5, 20, 0, 213, false, false, true));
+                AddShopItem(new Items(7,4, "케이크", "블랙포레스트 체리 케이크. 거짓말이다.", 50, 0, 0, 100, 43, false, false, true));
+                AddShopItem(new Items(8,5, "맹독해골", "투구다. 팬티가 아니다.", 500, 0, 20, 60, 425, false, false, true));
                 _haveItems = new Items[10];
-                AddItem(new Items(9, "주머니칼", "과일 깎아 먹으려고 사뒀던 짧은 나이프.", 0, 10, 0, 0, 0, true, true, false));
-
+                AddItem(new Items(9,1, "주머니칼", "과일 깎아 먹으려고 사뒀던 짧은 나이프.", 0, 10, 0, 0, 0, true, true, false));
+                _hands = new List<Items> { _haveItems[0] };
+                _body = new List<Items> { };
+                _boots = new List<Items> { };
+                _trinket = new List<Items> { };
+                _head = new List<Items> { };
+                
+                
             }
+
+           
 
             static void AddShopItem(Items item)
             {
@@ -342,6 +358,73 @@ namespace newProject
             private static void ToggleEquipStatus(int idx)
             {
                 _haveItems[idx].IsEquip = !_haveItems[idx].IsEquip;
+
+                if (_haveItems[idx].ItemType == 1)
+                {
+                    if ( _hands.Count == 0)
+                    {
+                        _hands.Add(_haveItems[idx]);
+                    }
+                    else
+                    {
+                        _hands[0].IsEquip = !_hands[0].IsEquip;
+                        _hands.Clear();
+                        _hands.Add(_haveItems[idx] );
+                    }
+                }
+                if (_haveItems[idx].ItemType ==2)
+                {
+                    if(_body.Count == 0)
+                    {
+                        _body.Add(_haveItems[idx]);
+                    }
+                    else
+                    {
+                        _body[0].IsEquip= !_body[0].IsEquip;
+                        _body.Clear();
+                        _body.Add(_haveItems[idx]);
+                    }
+                }
+                if (_haveItems[idx].ItemType == 3)
+                {
+                    if(_boots.Count == 0)
+                    {
+                        _boots.Add(_haveItems[idx]);
+                    }
+                    else
+                    {
+                        _boots[0].IsEquip = !_boots[0].IsEquip;
+                        _boots.Clear();
+                        _boots.Add(_haveItems[idx]);
+                    }
+                }
+                if (_haveItems[idx].ItemType == 4)
+                {
+                    if(_trinket.Count == 0)
+                    {
+                        _trinket.Add(_haveItems[idx]);
+                    }
+                    else
+                    {
+                        _trinket[0].IsEquip = !_trinket[0].IsEquip;
+                        _trinket.Clear();
+                        _trinket.Add(_haveItems[idx]) ;
+                    }
+                }
+                if (_haveItems[idx].ItemType == 5)
+                {
+                    if (_head.Count == 0)
+                    {
+                        _head.Add(_haveItems[idx]);
+                    }
+                    else
+                    {
+                        _head[0].IsEquip = !_head[0].IsEquip;
+                        _head.Clear();
+                        _head.Add(_haveItems[idx]);
+                    }
+                }
+                
             }
 
             private static void Shop()
