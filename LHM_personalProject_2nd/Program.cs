@@ -114,7 +114,7 @@ namespace newProject
         public string Job { get; }
         public int Atk { get; }
         public int Def { get; }
-        public int HP { get; }
+        public int HP { get; set; }
         public int Gold { get; set; }
 
 
@@ -191,6 +191,7 @@ namespace newProject
                 gameSetting();
                 PrintStartLogo();
                 Start();
+               
             }
             private static int CheckInput(int min, int max)
             {
@@ -220,10 +221,11 @@ namespace newProject
                 Console.WriteLine("1.상태보기");
                 Console.WriteLine("2.인벤토리");
                 Console.WriteLine("3.상점");
+                Console.WriteLine("4.던전입장");
                 Console.WriteLine();
                 Console.Write("원하시는 행동을 입력해주세요 >>");
 
-                switch (CheckInput(1, 3))
+                switch (CheckInput(1, 4))
                 {
                     case 1:
                         Status();
@@ -234,9 +236,165 @@ namespace newProject
                     case 3:
                         Shop();
                         break;
+                    case 4:
+                        Dungeon();
+                        break;
                 }
             }
 
+            private static void Dungeon()
+            {
+                Console.Clear();
+                Console.WriteLine("던전 입장");
+                Console.WriteLine("이 곳에서 던전으로 들어가기 전 활동을 하실 수 있습니다.");
+                Console.WriteLine("");
+                Console.WriteLine("1.쉬운 던전  |  방어력 5 이상 권장");
+                Console.WriteLine("2.일반 던전  |  방어력 11 이상 권장");
+                Console.WriteLine("3.어려운 던전  |  방어력 17 이상 권장");
+                Console.WriteLine("0.나가기");
+                Console.WriteLine("");
+                Console.Write("원하시는 행동을 입력해주세요 >>");
+                switch(CheckInput(0,3))
+                {
+                    case 0:
+                        Start();
+                        break;
+                    case 1:
+                        Easy();
+                        break;
+                    case 2:
+                        Normal();
+                        break;
+                    case 3:
+                        Hard();
+                        break;
+                }
+
+            }
+
+            private static void GameOver()
+            {
+                _player.HP = 100;
+                if (_player.Gold <= 0)
+                {
+                    _player.Gold = 0;
+                }
+                else
+                {
+                    _player.Gold -= 500;
+                }
+                Console.Clear();
+                Console.WriteLine("게임 오버");
+                Console.WriteLine("");
+                Console.WriteLine("준비를 철저히 합시다.");
+                Console.WriteLine("0.다시하기");
+                switch (CheckInput(0, 0))
+                {
+                    case 0:
+                        Start();
+                        break;
+                }
+            }
+
+            private static void Hard()
+            {
+                int bonusDef = getSumBonusDef();
+                int bonusHP = getSumBonusHP();
+                int bonusAtk = getSumBonusAtk();
+                Console.Clear();
+                Console.WriteLine("어려운 던전");
+                Console.WriteLine("");
+
+                if ((_player.Def+bonusDef) >= 17)
+                {
+                    if(_player.HP+bonusHP > 0)
+                    {
+                        Console.WriteLine("축하합니다!");
+                        Console.WriteLine("어려운 던전을 클리어하였습니다.");
+                        Console.WriteLine("");
+                        Console.WriteLine("[탐험 결과]");
+                        Console.WriteLine("체력 : " + (_player.HP) + " -> " + (_player.HP -= 80));
+                        Console.WriteLine("소지 골드 : " + (_player.Gold) + "G -> " + (_player.Gold += 3500) + "G");
+                        Console.ReadKey();
+                        Dungeon();
+                    }
+                    else
+                    {
+                        GameOver();
+                    }
+                }
+
+                else
+                {
+                    GameOver();
+                }
+            }
+
+            private static void Normal()
+            {
+                int bonusDef = getSumBonusDef();
+                int bonusHP = getSumBonusHP();
+                int bonusAtk = getSumBonusAtk();
+                Console.Clear();
+                Console.WriteLine("일반 던전");
+                Console.WriteLine("");
+              
+                if ((_player.Def+bonusDef) >= 11)
+                {
+                    if(_player.HP+bonusHP > 0)
+                    {
+                        Console.WriteLine("축하합니다!");
+                        Console.WriteLine("일반 던전을 클리어하였습니다.");
+                        Console.WriteLine("");
+                        Console.WriteLine("[탐험 결과]");
+                        Console.WriteLine("체력 : " + (_player.HP) + " -> " + (_player.HP -= 50));
+                        Console.WriteLine("소지 골드 : " + (_player.Gold) + "G -> " + (_player.Gold += 2000) + "G");
+                        Console.ReadKey();
+                        Dungeon();
+                    }
+                    else
+                    {
+                        GameOver();
+                    }
+                }
+                else
+                {
+                    GameOver();
+                }
+            }
+
+            private static void Easy()
+            {
+                int bonusDef = getSumBonusDef();
+                int bonusHP = getSumBonusHP();
+                int bonusAtk = getSumBonusAtk();
+                Console.Clear();
+                Console.WriteLine("쉬운 던전");
+                Console.WriteLine("");
+               
+                if (_player.Def+bonusDef >= 5)
+                {
+                   if(_player.HP+bonusHP > 0)
+                    {
+                        Console.WriteLine("축하합니다!");
+                        Console.WriteLine("쉬운 던전을 클리어하였습니다.");
+                        Console.WriteLine("");
+                        Console.WriteLine("[탐험 결과]");
+                        Console.WriteLine("체력 : " + (_player.HP) + " -> " + (_player.HP -= 30));
+                        Console.WriteLine("소지 골드 : " + (_player.Gold) + "G -> " + (_player.Gold += 1200) + "G");
+                        Console.ReadKey();
+                        Dungeon();
+                    }
+                    else
+                    {
+                        GameOver();
+                    }
+                }
+                else
+                {
+                    GameOver();
+                }
+            }
 
             private static void Status()
             {
@@ -329,7 +487,7 @@ namespace newProject
 
             }
 
-            private static void EquipMenu()
+            private static void EquipMenu() //아이템을 교체할 수 있지만 그냥 벗는 것은 불가능...
             {
                 Console.Clear();
                 Console.WriteLine("인벤토리 - 장착관리");
